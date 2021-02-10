@@ -16,13 +16,24 @@ button.ant-input-search-button:focus {
 .search-container {
 	display: flex;
 	justify-content: center;
-    align-items:center;
-
-	/* Reduce 70px of header and 100px of footer
-    ** Make footer display at bottom even if less content on main page
-    ** eg: when api doesn't return products
-    */
+	align-items: center;
 	min-height: calc(100vh - 170px);
-	margin-top: 70px;
 	padding: 1.5em 0em;
+}
+.filter-container {
+	margin-top: 100px;
+	margin-bottom: 30px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.filter-button {
+	border: none;
+	background: #ffffff;
+	padding: 8px;
+	color: #9c9c9c;
+	border: 1px solid #9c9c9c;
+	border-radius: 8px;
+	margin-right: 20px;
 }

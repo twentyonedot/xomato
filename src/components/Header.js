@@ -1,6 +1,6 @@
 import React from 'react'
 import './Header.css'
-import {Input} from 'antd'
+
 
 export default class Header extends React.Component {
 	render() {

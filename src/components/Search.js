@@ -1,12 +1,10 @@
 import React from 'react'
 import Header from './Header'
-import { Input } from 'antd'
-import './Search.css'
-import { GithubOutlined, GithubOutlinedTwoTone } from '@ant-design/icons'
 import Restaurant from './Restaurant'
+import './Search.css'
+import { Input, Row, Col } from 'antd'
+import { GithubOutlined } from '@ant-design/icons'
 import 'antd/dist/antd.css'
-import { Row, Col } from 'antd'
-
 let axios = require('axios')
 
 export default class Search extends React.Component {
@@ -14,12 +12,24 @@ export default class Search extends React.Component {
 		super()
 		this.debounceTimeout = 0
 		this.restaurants = []
+		this.ratingArray = []
 		this.title = ''
 		this.state = {
-			loading: false,
 			filteredRestaurants: [],
 		}
 	}
+	/**
+	 * @description LifeCycle Method , Invokes when the component mounts
+	 * @memberof Search
+	 */
+	componentDidMount() {
+		this.getRequiredFields()
+	}
+
+	/**
+	 * @description Fetch the restaurant using the api provided by the zomato by using axios method
+	 * @memberof Search
+	 */
 	getRestaurants = async () => {
 		let config = {
 			method: 'GET',
@@ -38,9 +48,12 @@ export default class Search extends React.Component {
 			})
 	}
 
+	/**
+	 * @description Filters out the unnecessary fiels and will update the class variable with the filteredFields restaurant.
+	 * @memberof Search
+	 */
 	getRequiredFields = async () => {
 		let restaurantsList = await this.getRestaurants()
-		/* console.log(restaurantsList) */
 		let requiredFieldsRestaurantList = restaurantsList.nearby_restaurants.map(
 			(val) => {
 				return {
@@ -58,9 +71,8 @@ export default class Search extends React.Component {
 				}
 			}
 		)
-		/* console.log(requiredFieldsRestaurantList) */
+
 		this.title = `${restaurantsList.location.title},${restaurantsList.location.city_name}`
-		/* console.log(this.title) */
 		this.restaurants = requiredFieldsRestaurantList
 		this.setState({
 			filteredRestaurants: [...this.restaurants],
@@ -83,9 +95,7 @@ export default class Search extends React.Component {
 			</Col>
 		)
 	}
-	componentDidMount() {
-		this.getRequiredFields()
-	}
+
 	debounceSearch = (event) => {
 		let text = event.target.value
 		if (this.debounceTimeout) {
@@ -144,6 +154,20 @@ export default class Search extends React.Component {
 					</a>
 				</Header>
 				<Row justify="center">
+					<Col xs={{ span: 24 }} md={{ span: 20 }}>
+						<div className="filter-container ">
+							<button id="sortByRating" className="filter-button">
+								<span>&#8645;</span> Rating: High to Low
+							</button>
+							<button id="sortByCost" className="filter-button">
+								<span>&#8645;</span> Cost: Low to High
+							</button>
+						</div>
+					</Col>
+				</Row>
+
+				<Row justify="center">
+					<h1 className="title">{this.title}</h1>
 					<Col xs={{ span: 24 }} md={{ span: 20 }}>
 						<div className="search-container ">
 							<Row justify="space-around">
