@@ -16,6 +16,7 @@ export default class Search extends React.Component {
 		this.title = ''
 		this.state = {
 			filteredRestaurants: [],
+			sorted: [],
 		}
 	}
 	/**
@@ -79,7 +80,6 @@ export default class Search extends React.Component {
 		})
 	}
 	getRestaurantCard = (restaurant) => {
-		console.log(restaurant)
 		return (
 			<Col xs={24} sm={12} md={12} xl={8}>
 				<Restaurant
@@ -137,9 +137,41 @@ export default class Search extends React.Component {
 		})
 	}
 
+	isChecked = (e) => {
+		let restaurantsToBeSorted = []
+		if (e.target.id === 'costFilter') {
+			restaurantsToBeSorted = [...this.state.filteredRestaurants]
+			restaurantsToBeSorted.sort((a, b) => {
+				if (a.perPersonCost > b.perPersonCost) {
+					return 1
+				}
+				return -1
+			})
+		} else if (e.target.id === 'ratingFilter') {
+			restaurantsToBeSorted = [...this.state.filteredRestaurants]
+			restaurantsToBeSorted.sort((a, b) => {
+				if (a.rating > b.rating) {
+					return -1
+				}
+				return 1
+			})
+		} else {
+			restaurantsToBeSorted = [...this.state.filteredRestaurants]
+			restaurantsToBeSorted.sort((a, b) => {
+				if (a.name > b.name) {
+					return 1
+				}
+				return -1
+			})
+		}
+		this.setState({
+			filteredRestaurants: [...restaurantsToBeSorted],
+		})
+	}
+
 	render() {
 		return (
-			<>
+			<div>
 				<Header>
 					<Input.Search
 						placeholder="Search for restaurant, cuisine or a dish..."
@@ -156,12 +188,37 @@ export default class Search extends React.Component {
 				<Row justify="center">
 					<Col xs={{ span: 24 }} md={{ span: 20 }}>
 						<div className="filter-container ">
-							<button id="sortByRating" className="filter-button">
-								<span>&#8645;</span> Rating: High to Low
-							</button>
-							<button id="sortByCost" className="filter-button">
-								<span>&#8645;</span> Cost: Low to High
-							</button>
+							<label>
+								<input
+									id="costFilter"
+									type="radio"
+									name="filter"
+									onChange={this.isChecked}
+								/>
+								<span className="checkedContent">
+									&#8645; Cost: Low to High
+								</span>
+							</label>
+							<label>
+								<input
+									id="noFilter"
+									type="radio"
+									name="filter"
+									onChange={this.isChecked}
+								/>
+								<span className="checkedContent">No Filters</span>
+							</label>
+							<label>
+								<input
+									id="ratingFilter"
+									type="radio"
+									name="filter"
+									onChange={this.isChecked}
+								/>
+								<span className="checkedContent">
+									&#8645; Rating: High to Low
+								</span>
+							</label>
 						</div>
 					</Col>
 				</Row>
@@ -180,7 +237,7 @@ export default class Search extends React.Component {
 						</div>
 					</Col>
 				</Row>
-			</>
+			</div>
 		)
 	}
 }
