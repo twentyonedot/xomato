@@ -1,0 +1,28 @@
+span.ant-input-search {
+	width: 50%;
+	border: black;
+}
+button.ant-input-search-button {
+	background: #bc3435;
+	border: #bc3435;
+}
+
+button.ant-input-search-button:hover {
+	background: #cf3434e7;
+}
+button.ant-input-search-button:focus {
+	background: #cf3434e7;
+}
+.search-container {
+	display: flex;
+	justify-content: center;
+    align-items:center;
+
+	/* Reduce 70px of header and 100px of footer
+    ** Make footer display at bottom even if less content on main page
+    ** eg: when api doesn't return products
+    */
+	min-height: calc(100vh - 170px);
+	margin-top: 70px;
+	padding: 1.5em 0em;
+}
