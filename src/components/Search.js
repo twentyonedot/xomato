@@ -2,6 +2,7 @@ import React from 'react'
 import Header from './Header'
 import { Input } from 'antd'
 import './Search.css'
+import { GithubOutlined, GithubOutlinedTwoTone } from '@ant-design/icons'
 import Restaurant from './Restaurant'
 import 'antd/dist/antd.css'
 import { Row, Col } from 'antd'
@@ -11,6 +12,7 @@ let axios = require('axios')
 export default class Search extends React.Component {
 	constructor() {
 		super()
+		this.debounceTimeout = 0
 		this.restaurants = []
 		this.title = ''
 		this.state = {
@@ -84,6 +86,46 @@ export default class Search extends React.Component {
 	componentDidMount() {
 		this.getRequiredFields()
 	}
+	debounceSearch = (event) => {
+		let text = event.target.value
+		if (this.debounceTimeout) {
+			window.clearTimeout(this.debounceTimeout)
+		}
+		this.debounceTimeout = setTimeout(
+			function () {
+				this.search(text)
+			}.bind(this),
+			300
+		)
+	}
+
+	search = (text) => {
+		let restaurantsClone = [...this.restaurants]
+		if (text.length === 0) {
+			this.setState({
+				filteredRestaurants: [...this.restaurants],
+			})
+			return
+		}
+		let filteredRestaurants = restaurantsClone.filter((val) => {
+			if (
+				val.name.toLowerCase().includes(text.toLowerCase()) ||
+				val.category.toLowerCase().includes(text.toLowerCase())
+			) {
+				return true
+			}
+			if (
+				text.toLowerCase() === val.name.toLowerCase() ||
+				text.toLowerCase() === val.category.toLowerCase()
+			) {
+				return true
+			}
+			return false
+		})
+		this.setState({
+			filteredRestaurants: [...filteredRestaurants],
+		})
+	}
 
 	render() {
 		return (
@@ -94,8 +136,12 @@ export default class Search extends React.Component {
 						allowClear
 						enterButton="Search"
 						size="large"
-						onSearch={this.getRequiredFields}
+						onSearch={this.search}
+						onChange={this.debounceSearch}
 					/>
+					<a href="https://github.com/twentyonedot/xomato" target="_blank">
+						<GithubOutlined style={{ fontSize: '35px', color: '#333' }} />
+					</a>
 				</Header>
 				<Row justify="center">
 					<Col xs={{ span: 24 }} md={{ span: 20 }}>
