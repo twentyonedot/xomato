@@ -25,6 +25,9 @@ export default class Search extends React.Component {
 	 */
 	componentDidMount() {
 		this.getRequiredFields()
+		this.setState({
+			filteredRestaurants: window.localStorage.getItem('filteredRestaurants'),
+		})
 	}
 
 	/**
@@ -78,6 +81,10 @@ export default class Search extends React.Component {
 		this.setState({
 			filteredRestaurants: [...this.restaurants],
 		})
+		window.localStorage.setItem(
+			'filteredRestaurants',
+			this.state.filteredRestaurants
+		)
 	}
 	getRestaurantCard = (restaurant) => {
 		return (
@@ -115,6 +122,10 @@ export default class Search extends React.Component {
 			this.setState({
 				filteredRestaurants: [...this.restaurants],
 			})
+			window.localStorage.setItem(
+				'filteredRestaurants',
+				this.state.filteredRestaurants
+			)
 			return
 		}
 		let filteredRestaurants = restaurantsClone.filter((val) => {
@@ -135,6 +146,10 @@ export default class Search extends React.Component {
 		this.setState({
 			filteredRestaurants: [...filteredRestaurants],
 		})
+		window.localStorage.setItem(
+			'filteredRestaurants',
+			this.state.filteredRestaurants
+		)
 	}
 
 	isChecked = (e) => {
@@ -167,6 +182,10 @@ export default class Search extends React.Component {
 		this.setState({
 			filteredRestaurants: [...restaurantsToBeSorted],
 		})
+		window.localStorage.setItem(
+			'filteredRestaurants',
+			this.state.filteredRestaurants
+		)
 	}
 
 	render() {
