@@ -4,8 +4,7 @@ import { PlusCircleOutlined } from '@ant-design/icons'
 import { Button, Card, Rate } from 'antd'
 
 export default class Restaurant extends React.Component {
-	calculateStart = (rating) => {
-        
+	calculateStars = (rating) => {
 		return (
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -154,24 +153,25 @@ export default class Restaurant extends React.Component {
 										data-metatip="true"
 									></path>
 								</svg>
-								<span className="rating">4.0</span>
+								<span className="rating">{this.props.rating}</span>
 							</span>
-							<span className="reviews"> (2,989 Delivery Reviews) </span>
+							<span className="reviews">
+								{' '}
+								({this.props.reviewsCount.toLocaleString()} Delivery Reviews){' '}
+							</span>
 						</div>
 						<div className="section-3">
-							<p className="category">
-								Chinese, Pizza, Burger, Sandwitch, Beverages, Fries
-							</p>
+							<p className="category">{this.props.category}</p>
 						</div>
 						<div className="section-4">
 							<p>
-								<span>₹150 per person</span>
+								<span>₹{this.props.cost} per person</span>
 								<span className="dot">&bull;</span>
-								30 min
+								{this.props.deliveryTime} min
 							</p>
 						</div>
 						<div className="section-5">
-							<p>Promoted</p>
+							<p>{this.props.isPromoted === true ? 'Promoted' : ''}</p>
 						</div>
 					</div>
 				</div>

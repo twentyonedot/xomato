@@ -48,11 +48,11 @@ export default class Search extends React.Component {
 					discount: 30,
 					name: val.restaurant.name,
 					rating: val.restaurant.user_rating.aggregate_rating,
-					reviewCount: 521,
+					reviewCount: parseInt(Math.random() * (9000 - 700) + 700),
 					category: val.restaurant.cuisines,
 					perPersonCost: val.restaurant.average_cost_for_two / 2,
-					deliveryTime: 32,
-					isPromoted: false,
+					deliveryTime: parseInt(Math.random() * (47 - 28) + 28),
+					isPromoted: Math.floor(Math.random() * Math.floor(2)),
 				}
 			}
 		)
@@ -74,6 +74,9 @@ export default class Search extends React.Component {
 					category={restaurant.category}
 					cost={restaurant.perPersonCost}
 					rating={restaurant.rating}
+					deliveryTime={restaurant.deliveryTime}
+					isPromoted={restaurant.isPromoted === 1 ? true : false}
+					reviewsCount={restaurant.reviewCount}
 				/>
 			</Col>
 		)
