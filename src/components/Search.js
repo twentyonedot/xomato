@@ -12,11 +12,16 @@ export default class Search extends React.Component {
 		super()
 		this.debounceTimeout = 0
 		this.restaurants = []
-		this.ratingArray = []
 		this.title = ''
 		this.state = {
-			filteredRestaurants: [],
-			sorted: [],
+			filteredRestaurants:
+				JSON.parse(window.localStorage.getItem('filteredRestaurants')) || [],
+			costFilterChecked:
+				window.localStorage.getItem('costFilterChecked') === 'true' || false,
+			ratingFilterChecked:
+				window.localStorage.getItem('ratingFilterChecked') === 'true' || false,
+			noFilterChecked:
+				window.localStorage.getItem('noFilterChecked') === 'true' || false,
 		}
 	}
 	/**
@@ -25,9 +30,6 @@ export default class Search extends React.Component {
 	 */
 	componentDidMount() {
 		this.getRequiredFields()
-		this.setState({
-			filteredRestaurants: window.localStorage.getItem('filteredRestaurants'),
-		})
 	}
 
 	/**
@@ -83,7 +85,7 @@ export default class Search extends React.Component {
 		})
 		window.localStorage.setItem(
 			'filteredRestaurants',
-			this.state.filteredRestaurants
+			JSON.stringify(this.state.filteredRestaurants)
 		)
 	}
 	getRestaurantCard = (restaurant) => {
@@ -124,7 +126,7 @@ export default class Search extends React.Component {
 			})
 			window.localStorage.setItem(
 				'filteredRestaurants',
-				this.state.filteredRestaurants
+				JSON.stringify(this.state.filteredRestaurants)
 			)
 			return
 		}
@@ -148,13 +150,21 @@ export default class Search extends React.Component {
 		})
 		window.localStorage.setItem(
 			'filteredRestaurants',
-			this.state.filteredRestaurants
+			JSON.stringify(this.state.filteredRestaurants)
 		)
 	}
 
 	isChecked = (e) => {
 		let restaurantsToBeSorted = []
 		if (e.target.id === 'costFilter') {
+			window.localStorage.setItem('costFilterChecked', true)
+			window.localStorage.setItem('ratingFilterChecked', false)
+			window.localStorage.setItem('noFilterChecked', false)
+			this.setState({
+				costFilterChecked: true,
+				ratingFilterChecked: false,
+				noFilterChecked: false,
+			})
 			restaurantsToBeSorted = [...this.state.filteredRestaurants]
 			restaurantsToBeSorted.sort((a, b) => {
 				if (a.perPersonCost > b.perPersonCost) {
@@ -163,6 +173,14 @@ export default class Search extends React.Component {
 				return -1
 			})
 		} else if (e.target.id === 'ratingFilter') {
+			window.localStorage.setItem('costFilterChecked', false)
+			window.localStorage.setItem('ratingFilterChecked', true)
+			window.localStorage.setItem('noFilterChecked', false)
+			this.setState({
+				ratingFilterChecked: true,
+				costFilterChecked: false,
+				noFilterChecked: false,
+			})
 			restaurantsToBeSorted = [...this.state.filteredRestaurants]
 			restaurantsToBeSorted.sort((a, b) => {
 				if (a.rating > b.rating) {
@@ -171,6 +189,14 @@ export default class Search extends React.Component {
 				return 1
 			})
 		} else {
+			window.localStorage.setItem('costFilterChecked', false)
+			window.localStorage.setItem('ratingFilterChecked', false)
+			window.localStorage.setItem('noFilterChecked', true)
+			this.setState({
+				noFilterChecked: true,
+				costFilterChecked: false,
+				ratingFilterChecked: false,
+			})
 			restaurantsToBeSorted = [...this.state.filteredRestaurants]
 			restaurantsToBeSorted.sort((a, b) => {
 				if (a.name > b.name) {
@@ -184,7 +210,7 @@ export default class Search extends React.Component {
 		})
 		window.localStorage.setItem(
 			'filteredRestaurants',
-			this.state.filteredRestaurants
+			JSON.stringify(this.state.filteredRestaurants)
 		)
 	}
 
@@ -212,6 +238,7 @@ export default class Search extends React.Component {
 									id="costFilter"
 									type="radio"
 									name="filter"
+									checked={this.state.costFilterChecked}
 									onChange={this.isChecked}
 								/>
 								<span className="checkedContent">
@@ -223,6 +250,7 @@ export default class Search extends React.Component {
 									id="noFilter"
 									type="radio"
 									name="filter"
+									checked={this.state.noFilterChecked}
 									onChange={this.isChecked}
 								/>
 								<span className="checkedContent">No Filters</span>
@@ -232,6 +260,7 @@ export default class Search extends React.Component {
 									id="ratingFilter"
 									type="radio"
 									name="filter"
+									checked={this.state.ratingFilterChecked}
 									onChange={this.isChecked}
 								/>
 								<span className="checkedContent">
